@@ -1,11 +1,18 @@
 import { BsBookmarkPlus, BsBookmarkDash } from "react-icons/bs";
 import Swal from "sweetalert2";
-import { useLocation, useNavigate } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const NewsLink = ({ el, fetchNews, fetchBookmarks }) => {
   const location = useLocation();
-  const navigate = useNavigate();
+  const [bookmarks, setBookmarks] = useState([]);
+
+  const bookmarkHandler = () => {
+    let data = localStorage.getItem("myBookmarks");
+    setBookmarks(JSON.parse(data));
+  };
+
+  useEffect(() => {}, []);
 
   const addHandler = () => {
     let myBookmarks = localStorage.getItem("myBookmarks");
@@ -24,7 +31,7 @@ const NewsLink = ({ el, fetchNews, fetchBookmarks }) => {
       } else {
         myBookmarks.push(el);
         localStorage.setItem("myBookmarks", JSON.stringify(myBookmarks));
-        fetchNews()
+        fetchNews();
       }
     }
   };
@@ -34,33 +41,48 @@ const NewsLink = ({ el, fetchNews, fetchBookmarks }) => {
     myBookmarks = JSON.parse(myBookmarks);
     let filtered = myBookmarks.filter((book) => book.id !== el.id);
     localStorage.setItem("myBookmarks", JSON.stringify(filtered));
-    if(location.pathname === "/bookmark"){
-      fetchBookmarks()
-    }else{
-      fetchNews()
-
+    if (location.pathname === "/bookmark") {
+      fetchBookmarks();
+    } else {
+      fetchNews();
     }
-  }
+  };
 
   return (
     <div className="md:w-1/3 sm:w-full m-auto mt-8 text-start">
       <div className="flex flex-row">
         <p className="text-xs text-black">{el.link}</p>
-        {JSON.parse(localStorage.getItem("myBookmarks")).find((book) => el.id === book.id) ? 
-            <button 
-              onClick={() => deleteHanler()}
-              className="ml-2 mb-1 transition duration-300 hover:scale-105 transform: hover:-translate-y-1"
-            >
-              <BsBookmarkDash size={25} />
-            </button>
-           : 
+        {!localStorage.getItem("myBookmarks") && (
+          <button
+            onClick={() => addHandler()}
+            className="ml-2 mb-1 transition duration-300 hover:scale-105 transform: hover:-translate-y-1"
+          >
+            <BsBookmarkPlus size={25} />
+          </button>
+        )}
+        {localStorage.getItem("myBookmarks") &&
+          !JSON.parse(localStorage.getItem("myBookmarks")).find(
+            (book) => el.id === book.id
+          ) && (
             <button
               onClick={() => addHandler()}
               className="ml-2 mb-1 transition duration-300 hover:scale-105 transform: hover:-translate-y-1"
             >
               <BsBookmarkPlus size={25} />
             </button>
-        }
+          )}
+          {
+            localStorage.getItem("myBookmarks") &&
+            JSON.parse(localStorage.getItem("myBookmarks")).find(
+              (book) => el.id === book.id
+            ) &&
+            <button
+              onClick={() => deleteHanler()}
+              className="ml-2 mb-1 transition duration-300 hover:scale-105 transform: hover:-translate-y-1"
+            >
+              <BsBookmarkDash size={25} />
+            </button>
+          }
       </div>
       <a
         href={el.link}

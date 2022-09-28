@@ -2,7 +2,6 @@ import NewsLink from "../components/NewsLink";
 import { useState, useEffect } from "react";
 const BookMarks = () => {
   const [bookmarks, setBookmarks] = useState([]);
-  let data = localStorage.getItem("myBookmarks");
 
   const fetchBookmarks = () => {
     let data = localStorage.getItem("myBookmarks");
@@ -11,7 +10,7 @@ const BookMarks = () => {
 
   useEffect(() => {
     fetchBookmarks();
-  }, [data]);
+  }, []);
 
   return (
     <>
