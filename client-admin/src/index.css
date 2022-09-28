@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Mukta&display=swap');
+
+* {
+    font-family: 'Noto Sans Mono', monospace;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
